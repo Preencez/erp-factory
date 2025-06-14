@@ -4,204 +4,112 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>JE Oils Manufacturing ERP Portal</title>
-
-  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Alpine.js -->
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
-
   <style>
-    .modal-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.6);
-      display: flex; align-items: center; justify-content: center;
-      z-index: 50;
+    body {
+      background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/tiny_grid.png');
     }
-    .modal-content {
-      background: white; border-radius: .5rem;
-      width: 90%; max-width: 900px;
-      height: 90%; overflow: auto;
-      position: relative; padding: 1rem;
-    }
-    .modal-close {
-      position: absolute; top: .5rem; right: 1rem;
-      font-size: 1.5rem; cursor: pointer;
-    }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:50 }
+    .modal-content { background:white; border-radius:.5rem; width:90%; max-width:900px; height:90%; overflow:auto; position:relative; padding:1rem }
+    .modal-close { position:absolute; top:.5rem; right:1rem; font-size:1.5rem; cursor:pointer }
   </style>
 </head>
-
-<body class="bg-gray-100 font-sans">
+<body class="font-sans">
 
   <!-- HEADER -->
-  <header class="bg-black text-orange-400 py-6 text-center mb-6">
-    <h1 class="text-3xl font-semibold">JE Oils Manufacturing ERP Portal</h1>
+  <header class="relative h-40 flex items-center justify-center"
+          style="background: linear-gradient(135deg,#000,#f97316);">
+    <img src="Picture1.png" alt="JE Oils Logo"
+         class="absolute left-4 top-4 h-12 mix-blend-screen"/>
+    <h1 class="text-white text-4xl font-semibold z-10">JE Oils Manufacturing ERP Portal</h1>
+    <div class="absolute inset-0 bg-black opacity-20"></div>
   </header>
 
   <!-- CARD GRID -->
-  <div class="max-w-6xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6 mb-8">
+  <div class="max-w-6xl mx-auto px-4 py-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-6">
     <template x-for="c in formCards" :key="c.id">
       <div @click="open(c.id)"
-           class="bg-white rounded-lg shadow hover:shadow-lg cursor-pointer p-6 text-center">
-        <div class="w-12 h-12 mx-auto mb-4" x-html="c.icon"></div>
-        <h2 class="font-medium" x-text="c.label"></h2>
+           class="bg-black text-orange-400 rounded-lg shadow-lg p-6 text-center cursor-pointer
+                  hover:bg-orange-400 hover:text-black transition-colors">
+        <div class="mx-auto mb-4 p-3 bg-orange-400 rounded-full w-16 h-16 flex items-center justify-center
+                    hover:bg-black hover:text-orange-400 transition-colors">
+          <div class="w-8 h-8" x-html="c.icon"></div>
+        </div>
+        <h2 class="text-lg font-medium" x-text="c.label"></h2>
       </div>
     </template>
-
-    <!-- Dashboard card -->
-    <div @click="open('dashboard')"
-         class="bg-white rounded-lg shadow hover:shadow-lg cursor-pointer p-6 text-center">
-      <div class="w-12 h-12 mx-auto mb-4">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-purple-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 3h8v8H3V3zm0 10h8v8H3v-8zm10-10h8v8h-8V3zm0 10h8v8h-8v-8z"/>
-        </svg>
-      </div>
-      <h2 class="font-medium">Dashboard</h2>
-    </div>
   </div>
 
-  <!-- MODAL (uses x-show so iframe stays in DOM) -->
+  <!-- MODAL -->
   <div x-show="modal" class="modal-overlay" @click.self="close()">
     <div class="modal-content">
-      <button class="modal-close" @click="close()">×</button>
-
-      <!-- Non-dashboard forms -->
-      <template x-if="modal !== 'dashboard'">
-        <iframe
-          x-ref="frm"
-          class="w-full h-full"
-          frameborder="0"
-          marginheight="0"
-          marginwidth="0">
-          Loading…
-        </iframe>
-      </template>
-
-      <!-- Dashboard placeholder -->
-      <template x-if="modal === 'dashboard'">
-        <h2 class="text-2xl font-semibold mb-4 text-center">Dashboard</h2>
-        <p class="text-center text-gray-600">[Dashboard charts go here]</p>
-      </template>
+      <button class="modal-close text-gray-600 hover:text-black" @click="close()">×</button>
+      <iframe x-ref="frm" class="w-full h-full" frameborder="0" marginheight="0" marginwidth="0">
+        Loading…
+      </iframe>
     </div>
   </div>
 
-  <!-- Alpine.js App -->
   <script>
     function erpApp() {
       return {
         modal: null,
-
-        // All your cards in one array
         formCards: [
-          {
-            id: 'raw',
-            label: 'Raw Materials',
-            url: 'https://docs.google.com/forms/d/e/1FAIpQLSf4Dnq2YTOJFVGpwjywnGEf3k4n_LlO7zkM6lust94DrVnOMg/viewform?embedded=true',
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M3 7h18M3 12h18M3 17h18"/>
-                   </svg>`
-          },
-          {
-            id: 'processing',
-            label: 'Processing',
-            url: 'https://docs.google.com/forms/d/e/1FAIpQLSelR8NGYCDsgFLLN8wNfvJug9cfDYzW_VUOuchMH0iAuS5cWw/viewform?embedded=true',
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path d="M12 20V4m8 8H4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                   </svg>`
-          },
-          {
-            id: 'qc',
-            label: 'QC',
-            url: 'https://docs.google.com/forms/d/e/1FAIpQLScl9K6VYhJ_xBXj7PPpwTS2K3ccjFPjqdU0pWbx-hKYBj0gXQ/viewform?embedded=true',
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path d="M9 12l2 2 4-4M7 12a5 5 0 1110 0 5 5 0 01-10 0z" stroke-width="2"/>
-                   </svg>`
-          },
-          {
-            id: 'sales',
-            label: 'Sales',
-            url: 'https://docs.google.com/forms/d/e/1FAIpQLSe3P2U3kChBapFjR-ZxtwV2GBfFHX4H_ULjgij46EEozB-PWg/viewform?embedded=true',
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path d="M3 3h18v18H3z" stroke-width="2"/><path d="M3 9h18M9 21V9" stroke-width="2"/>
-                   </svg>`
-          },
-          {
-            id: 'expenses',
-            label: 'Expenses',
-            url: 'https://docs.google.com/forms/d/e/1FAIpQLScwjytwdtYnNd5674GAt9Vk70b9u_-ozkny-gW3fu94QIcDSA/viewform?embedded=true',
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path d="M12 8v8m4-4H8" stroke-width="2"/>
-                   </svg>`
-          },
-          {
-            id: 'issuing',
-            label: 'Issuing of Supplies',
-            url: 'https://docs.google.com/forms/d/e/1FAIpQLSeWdnlltU2ugjnWdMNkam3RH1tbEH6S6vwrMRUFpAXgkRNlNQ/viewform?embedded=true',
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path d="M4 4h16v4H4zM4 12h16v4H4zM4 20h16v-4H4z" stroke-width="2"/>
-                   </svg>`
-          },
-          {
-            id: 'inventory',
-            label: 'Inventory',
-            url: 'https://docs.google.com/forms/d/e/1FAIpQLSdcEixJ7dY9FInKOGyTi25lMd1b_KrZC54Hl47t-5s9wGffSQ/viewform?embedded=true',
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path d="M3 4h18M3 9h18M3 14h18M3 19h18" stroke-width="2"/>
-                   </svg>`
-          },
-          {
-            id: 'cleaning',
-            label: 'Cleaning Records',
-            url: 'https://docs.google.com/forms/d/e/1FAIpQLSd4sCmU_qhb01kuVH8p7G1hDWvufwOYvS6tm0wHSOpz9g1vQA/viewform?embedded=true',
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" stroke-width="2"/>
-                   </svg>`
-          },
-          {
-           id: 'visitors',
-            label: 'Visitors Log',
-            url: 'https://docs.google.com/forms/d/e/1FAIpQLSdAH1izzOPbbYEEdmTii1ZQo8DTykhhfQenvABZCN-rjzTwhA/viewform?embedded=true',
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path d="M5 3v4M19 3v4M5 21v-4M19 21v-4M3 9h18M3 15h18" stroke-width="2"/>
-                   </svg>`
-          },
+          { id:'raw',        label:'Raw Materials',    url:'https://docs.google.com/forms/d/e/1FAIpQLSf4Dnq2YTOJFVGpwjywnGEf3k4n_LlO7zkM6lust94DrVnOMg/viewform?embedded=true',
+            icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M3 7h18M3 12h18M3 17h18"/></svg>` },
+          { id:'processing', label:'Processing',       url:'https://docs.google.com/forms/d/e/1FAIpQLSelR8NGYCDsgFLLN8wNfvJug9cfDYzW_VUOuchMH0iAuS5cWw/viewform?embedded=true',
+            icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M12 20V4m8 8H4"/></svg>` },
+          { id:'qc',         label:'QC',               url:'https://docs.google.com/forms/d/e/1FAIpQLScl9K6VYhJ_xBXj7PPpwTS2K3ccjFPjqdU0pWbx-hKYBj0gXQ/viewform?embedded=true',
+            icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M9 12l2 2 4-4M7 12a5 5 0 1110 0"/></svg>` },
+          { id:'sales',      label:'Sales',            url:'https://docs.google.com/forms/d/e/1FAIpQLSe3P2U3kChBapFjR-ZxtwV2GBfFHX4H_ULjgij46EEozB-PWg/viewform?embedded=true',
+            icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M3 3h18v18H3z"/><path stroke-width="2" d="M3 9h18M9 21V9"/></svg>` },
+          { id:'expenses',   label:'Expenses',         url:'https://docs.google.com/forms/d/e/1FAIpQLScwjytwdtYnNd5674GAt9Vk70b9u_-ozkny-gW3fu94QIcDSA/viewform?embedded=true',
+            icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M12 8v8m4-4H8"/></svg>` },
+          { id:'issuing',    label:'Issuing Supplies', url:'https://docs.google.com/forms/d/e/1FAIpQLSeWdnlltU2ugjnWdMNkam3RH1tbEH6S6vwrMRUFpAXgkRNlNQ/viewform?embedded=true',
+            icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M4 4h16v4H4zM4 12h16v4H4zM4 20h16v-4H4z"/></svg>` },
+          { id:'inventory',  label:'Inventory',        url:'https://docs.google.com/forms/d/e/1FAIpQLSdcEixJ7dY9FInKOGyTi25lMd1b_KrZC54Hl47t-5s9wGffSQ/viewform?embedded=true',
+            icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M3 4h18M3 9h18M3 14h18M3 19h18"/></svg>` },
+          { id:'cleaning',   label:'Cleaning Records', url:'https://docs.google.com/forms/d/e/1FAIpQLSd4sCmU_qhb01kuVH8p7G1hDWvufwOYvS6tm0wHSOpz9g1vQA/viewform?embedded=true',
+            icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M8 6h13M8 12h13M8 18h13"/></svg>` },
+          { id:'visitors',   label:'Visitors Log',    url:'https://docs.google.com/forms/d/e/1FAIpQLSdAH1izzOPbbYEEdmTii1ZQo8DTykhhfQenvABZCN-rjzTwhA/viewform?embedded=true',
+            icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M5 3v4M19 3v4M5 21v-4M19 21v-4M3 9h18M3 15h18"/></svg>` },
           {
             id: 'maintenance',
-            label: 'Maintenance',
-            url: 'https://docs.google.com/forms/d/e/1FAIpQLSc_qCBCZoQ5hz7MH5MGMi5dbwYYevFZqwCMhhr9MCOIAS7n6A/viewform?embedded=true',
-            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                 d="M12 1v3
-                    M12 20v3
-                    M4.22 4.22l2.12 2.12
-                    M15.66 15.66l2.12 2.12
-                    M1 12h3
-                    M20 12h3
-                    M4.22 19.78l2.12-2.12
-                    M15.66 8.34l2.12-2.12"/>
-         </svg>`
+          label: 'Maintenance',
+          url: 'https://docs.google.com/forms/d/e/1FAIpQLSc_qCBCZoQ5hz7MH5MGMi5dbwYYevFZqwCMhhr9MCOIAS7n6A/viewform?embedded=true',
+          icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                         d="M12 1v3
+                            M12 20v3
+                            M4.22 4.22l2.12 2.12
+                            M15.66 15.66l2.12 2.12
+                            M1 12h3
+                            M20 12h3
+                            M4.22 19.78l2.12-2.12
+                            M15.66 8.34l2.12-2.12"/>
+                 </svg>`
+          },
+          {
+            id:'training',
+            label:'Training Records',
+            url:'https://docs.google.com/forms/d/e/1FAIpQLSe6bUeKr2xUNGfrVb7ONLNho7kO1-4xEsGDFUx2P22dw7EJtg/viewform?embedded=true',
+            icon:`<svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                     <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                           d="M12 14l9-5-9-5-9 5 9 5zm0 7v-7m0 0L3 7m9 7l9-7"/>
+                   </svg>`
           }
         ],
 
-        init() {
-          // any startup logic
-        },
-
-        // open the modal and set iframe src
         open(id) {
           this.modal = id;
-          if (id !== 'dashboard') {
-            this.$refs.frm.src = this.formCards
-              .find(f => f.id === id)
-              .url;
-          }
+          this.$refs.frm.src = this.formCards.find(f => f.id === id).url;
         },
-
-        // close the modal and clear iframe src
         close() {
-          if (this.$refs.frm) this.$refs.frm.src = '';
+          this.$refs.frm.src = '';
           this.modal = null;
-        }
+        },
+        init() {}
       };
     }
   </script>
