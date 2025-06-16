@@ -8,6 +8,7 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
   <style>
     body {
+      /* subtle grid background */
       background-image: url('https://www.toptal.com/designers/subtlepatterns/patterns/tiny_grid.png');
     }
     .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.6); display:flex; align-items:center; justify-content:center; z-index:50 }
@@ -16,6 +17,18 @@
   </style>
 </head>
 <body class="font-sans">
+
+  <!-- Password Prompt -->
+  <script>
+    (function(){
+      const SECRET = 'JEOILS';           // ← change this to your password
+      const entry = prompt('Enter portal password:');
+      if (entry !== SECRET) {
+        alert('Access denied');
+        window.location.href = 'https://www.google.com';  // or another “no-access” page
+      }
+    })();
+  </script>
 
   <!-- HEADER -->
   <header class="relative h-40 flex items-center justify-center"
@@ -74,31 +87,15 @@
             icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M8 6h13M8 12h13M8 18h13"/></svg>` },
           { id:'visitors',   label:'Visitors Log',    url:'https://docs.google.com/forms/d/e/1FAIpQLSdAH1izzOPbbYEEdmTii1ZQo8DTykhhfQenvABZCN-rjzTwhA/viewform?embedded=true',
             icon:`<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" d="M5 3v4M19 3v4M5 21v-4M19 21v-4M3 9h18M3 15h18"/></svg>` },
-          {
-            id: 'maintenance',
-          label: 'Maintenance',
-          url: 'https://docs.google.com/forms/d/e/1FAIpQLSc_qCBCZoQ5hz7MH5MGMi5dbwYYevFZqwCMhhr9MCOIAS7n6A/viewform?embedded=true',
-          icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                         d="M12 1v3
-                            M12 20v3
-                            M4.22 4.22l2.12 2.12
-                            M15.66 15.66l2.12 2.12
-                            M1 12h3
-                            M20 12h3
-                            M4.22 19.78l2.12-2.12
-                            M15.66 8.34l2.12-2.12"/>
-                 </svg>`
+          { id: 'maintenance',
+            label: 'Maintenance',
+            url: 'https://docs.google.com/forms/d/e/1FAIpQLSc_qCBCZoQ5hz7MH5MGMi5dbwYYevFZqwCMhhr9MCOIAS7n6A/viewform?embedded=true',
+            icon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 1v3 M12 20v3 M4.22 4.22l2.12 2.12 M15.66 15.66l2.12 2.12 M1 12h3 M20 12h3 M4.22 19.78l2.12-2.12 M15.66 8.34l2.12-2.12"/></svg>`
           },
-          {
-            id:'training',
+          { id:'training',
             label:'Training Records',
             url:'https://docs.google.com/forms/d/e/1FAIpQLSe6bUeKr2xUNGfrVb7ONLNho7kO1-4xEsGDFUx2P22dw7EJtg/viewform?embedded=true',
-            icon:`<svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                     <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                           d="M12 14l9-5-9-5-9 5 9 5zm0 7v-7m0 0L3 7m9 7l9-7"/>
-                   </svg>`
-          }
+            icon:`<svg xmlns="http://www.w3.org/2000/svg" class="w-full h-full text-pink-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5zm0 7v-7m0 0L3 7m9 7l9-7"/></svg>` }
         ],
 
         open(id) {
